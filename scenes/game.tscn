@@ -1,0 +1,61 @@
+[gd_scene load_steps=6 format=3 uid="uid://cd6yet48cajot"]
+
+[ext_resource type="Script" uid="uid://dt3tfdcj3wxun" path="res://scripts/game.gd" id="1_lnu2h"]
+[ext_resource type="PackedScene" uid="uid://bghnv4gs2o48v" path="res://scenes/player.tscn" id="1_uwrxv"]
+[ext_resource type="PackedScene" uid="uid://b6p8q4gj3x283" path="res://scenes/ball.tscn" id="2_yqjtg"]
+[ext_resource type="Script" uid="uid://bvglvbvwhjb2d" path="res://scripts/camera.gd" id="4_lbhrr"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_yqjtg"]
+size = Vector2(1152.25, 0)
+
+[node name="Game" type="Node2D"]
+script = ExtResource("1_lnu2h")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_right = 1152.0
+offset_bottom = 648.0
+color = Color(0.150075, 0.150075, 0.150075, 1)
+metadata/_edit_use_anchors_ = true
+
+[node name="ScoreLabel" type="Label" parent="."]
+offset_left = 536.0
+offset_top = 16.0
+offset_right = 616.0
+offset_bottom = 58.0
+theme_override_font_sizes/font_size = 30
+text = "Score"
+metadata/_edit_use_anchors_ = true
+
+[node name="Player1" parent="." instance=ExtResource("1_uwrxv")]
+position = Vector2(64, 320)
+paddle_color = Color(1, 0, 0, 1)
+
+[node name="Player2" parent="." instance=ExtResource("1_uwrxv")]
+position = Vector2(1088, 320)
+player_id = 2
+paddle_color = Color(0.0880065, 0.325595, 1, 1)
+
+[node name="Ball" parent="." instance=ExtResource("2_yqjtg")]
+position = Vector2(576, 320)
+
+[node name="TopWall" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TopWall"]
+position = Vector2(576.125, 0)
+shape = SubResource("RectangleShape2D_yqjtg")
+
+[node name="BottomWall" type="StaticBody2D" parent="."]
+position = Vector2(0, 648)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BottomWall"]
+position = Vector2(576.125, 0)
+shape = SubResource("RectangleShape2D_yqjtg")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(576, 324)
+script = ExtResource("4_lbhrr")
+
+[connection signal="out_of_bounds_left" from="Ball" to="." method="_on_ball_out_of_bounds_left"]
+[connection signal="out_of_bounds_right" from="Ball" to="." method="_on_ball_out_of_bounds_right"]
+[connection signal="player_hit" from="Ball" to="." method="_on_player_hit"]
+[connection signal="wall_hit" from="Ball" to="." method="_on_wall_hit"]
